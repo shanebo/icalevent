@@ -1,0 +1,10 @@
+{
+	"name": "icalevent",
+	"version": "0.0.1",
+	"description": "pass in event details and get ics file back",
+	"keywords": ["ical"],
+	"repository": "git://github.com/shanebo/hitch.git",
+	"author": "Shane Thacker <shane@steadymade.com>",
+	"engine": ">= 0.4.1",
+	"main": "./lib/icalevent"
+}

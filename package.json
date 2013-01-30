@@ -1,6 +1,6 @@
 {
 	"name": "icalevent",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "pass in event details and get ics file back",
 	"keywords": ["ical", "ics"],
 	"repository": "git://github.com/shanebo/icalevent.git",

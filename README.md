@@ -11,5 +11,4 @@ Create an iCalEvent instance, set limited event details and event.toFile() will 
 
 ## Todos
 
-* cleanup example
-* cleanup code
+* tests

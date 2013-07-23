@@ -25,8 +25,6 @@ var event = new iCalEvent({
 		email: 'luchador@monastery.org'
 	}
 });
-
-console.log(event.toFile());
 ```
 
 Or:
@@ -42,11 +40,15 @@ event.set('start', '2014-07-01T02:00:00-05:00');
 event.set('end', '2014-07-01T02:30:00-05:00');
 event.set('url', 'http://google.com/search?q=nacho+libre');
 event.set('organizer', {name: 'Nacho Libre', email: 'luchador@monastery.org'});
-
-console.log(event.toFile());
 ```
 
-Outputs:
+To ics string:
+
+``` js
+event.toFile();
+```
+
+Returns:
 
 ```
 BEGIN:VCALENDAR

@@ -2,6 +2,12 @@
 
 Create an iCalEvent instance by setting limited properties and event.toFile() to get an ics formatted string back.
 
+## Install
+
+With [npm](http://npmjs.org):
+
+	npm install icalevent
+
 
 ## Examples
 
@@ -97,12 +103,6 @@ END:VEVENT
 END:VCALENDAR
 ```
 
-
-## Install
-
-With [npm](http://npmjs.org):
-
-	npm install icalevent
 
 ## License
 

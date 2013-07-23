@@ -1,7 +1,7 @@
 {
 	"name": "icalevent",
-	"version": "0.0.2",
-	"description": "pass in event details and get ics file back",
+	"version": "0.0.3",
+	"description": "Create an iCalEvent instance by setting limited properties and get an ics formatted string.",
 	"keywords": ["ical", "ics"],
 	"repository": "git://github.com/shanebo/icalevent.git",
 	"author": "Shane Thacker <shane@steadymade.com>",

@@ -1,6 +1,6 @@
 # iCalEvent
 
-Create an iCalEvent instance by setting limited properties and get an ics formatted string.
+Create an iCalEvent instance by setting limited properties and event.toFile() to get an ics formatted string back.
 
 
 ## Examples
@@ -23,7 +23,11 @@ var event = new iCalEvent({
 console.log(event.toFile());
 ```
 
+Or:
+
 ``` js
+var iCalEvent = require('icalevent');
+
 var event = new iCalEvent();
 
 event.set('summary', 'Priestly Duties');

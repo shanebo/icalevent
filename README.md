@@ -57,6 +57,46 @@ END:VEVENT
 END:VCALENDAR
 ```
 
+## Methods
+
+### .set(property, value)
+``` js
+event.set('url', 'http://google.com/search?q=nacho+libre');
+```
+
+### .get(property)
+``` js
+event.get('url');
+```
+
+Returns:
+
+```
+http://google.com/search?q=nacho+libre
+```
+
+### .toFile()
+``` js
+event.toFile();
+```
+
+Returns:
+
+```
+BEGIN:VCALENDAR
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:373fda4f-08ed-485a-b083-3c26cfa010a1
+DTSTAMP:20130723T015802
+ORGANIZER;CN="Nacho Libre":mailto:luchador@monastery.org
+DTSTART:20140701T020000
+DTEND:20140701T023000
+URL;VALUE=URI:http://google.com/search?q=nacho+libre
+SUMMARY:Priestly Duties
+END:VEVENT
+END:VCALENDAR
+```
+
 
 ## Install
 

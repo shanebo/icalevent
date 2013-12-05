@@ -16,6 +16,7 @@ var iCalEvent = require('icalevent');
 
 var event = new iCalEvent({
 	summary: 'Priestly Duties',
+	description: 'Nacho Libre is a 2006 American-Mexican comedy film',
 	offset: new Date().getTimezoneOffset(),
 	start: '2014-07-01T02:00:00-05:00',
 	end: '2014-07-01T02:30:00-05:00',
@@ -35,6 +36,7 @@ var iCalEvent = require('icalevent');
 var event = new iCalEvent();
 
 event.set('summary', 'Priestly Duties');
+event.set('description', 'Nacho Libre is a 2006 American-Mexican comedy film');
 event.set('offset', new Date().getTimezoneOffset());
 event.set('start', '2014-07-01T02:00:00-05:00');
 event.set('end', '2014-07-01T02:30:00-05:00');
@@ -61,6 +63,7 @@ DTSTART:20140701T020000
 DTEND:20140701T023000
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 SUMMARY:Priestly Duties
+DESCRIPTION:Nacho Libre is a 2006 American-Mexican comedy film
 END:VEVENT
 END:VCALENDAR
 ```
@@ -101,6 +104,7 @@ DTSTART:20140701T020000
 DTEND:20140701T023000
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 SUMMARY:Priestly Duties
+DESCRIPTION:Nacho Libre is a 2006 American-Mexican comedy film
 END:VEVENT
 END:VCALENDAR
 ```

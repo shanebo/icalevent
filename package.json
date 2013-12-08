@@ -1,12 +1,12 @@
 {
 	"name": "icalevent",
-	"version": "0.0.3",
+	"version": "0.3.0",
 	"description": "Create an iCalEvent instance by setting limited properties and get an ics formatted string.",
 	"keywords": ["ical", "ics"],
 	"repository": "git://github.com/shanebo/icalevent.git",
 	"author": "Shane Thacker <shane@steadymade.com>",
 	"dependencies": {
-		"tzone": "0.0.1"
+		"tzone": "0.0.2"
 	},
 	"engine": ">= 0.4.1",
 	"main": "./lib/icalevent"

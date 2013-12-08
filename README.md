@@ -59,13 +59,13 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//iCalEvent.js v0.3//EN
 BEGIN:VEVENT
-UID:9d5acdaa-dfec-43d1-a017-1c70a7f935c9
-DTSTAMP:20131207T212858
+UID:d8dbbc27-7f97-4d83-9fdf-bb45d382ffdc
+DTSTAMP:20131208T033712
 DTSTART;TZID=US/Central:20140701T010000
 DTEND;TZID=US/Central:20140701T013000
-SUMMARY:Priestly Duties
+SUMMARY:Priestly Duties.
 DESCRIPTION:Home flu visit.
-ORGANIZER;CN="Nacho Libre":mailto:luchador@monastery.org
+ORGANIZER;CN=Nacho Libre:mailto:luchador@monastery.org
 LOCATION:Casa
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 END:VEVENT
@@ -129,13 +129,13 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//iCalEvent.js v0.3//EN
 BEGIN:VEVENT
-UID:9d5acdaa-dfec-43d1-a017-1c70a7f935c9
-DTSTAMP:20131207T212858
+UID:d8dbbc27-7f97-4d83-9fdf-bb45d382ffdc
+DTSTAMP:20131208T033712
 DTSTART;TZID=US/Central:20140701T010000
 DTEND;TZID=US/Central:20140701T013000
-SUMMARY:Priestly Duties
+SUMMARY:Priestly Duties.
 DESCRIPTION:Home flu visit.
-ORGANIZER;CN="Nacho Libre":mailto:luchador@monastery.org
+ORGANIZER;CN=Nacho Libre:mailto:luchador@monastery.org
 LOCATION:Casa
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 END:VEVENT

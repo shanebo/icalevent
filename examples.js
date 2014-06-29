@@ -5,6 +5,7 @@ var http = require('http');
 
 
 var event = new iCalEvent({
+	uid: 9873647,
 	offset: new Date().getTimezoneOffset(),
 	method: 'request',
 	status: 'confirmed',
@@ -20,6 +21,7 @@ var event = new iCalEvent({
 	],
 	start: '2014-07-01T02:00:00-05:00',
 	end: '2014-07-01T02:30:00-05:00',
+	timezone: 'US/Central',
 	summary: 'Priestly Duties',
 	description: 'Home flu visit.',
 	location: 'Casa',
@@ -36,6 +38,7 @@ var event = new iCalEvent({
 
 var e = new iCalEvent();
 
+e.set('uid', 9873647);
 e.set('offset', new Date().getTimezoneOffset());
 e.set('method', 'request');
 e.set('status', 'confirmed');
@@ -51,6 +54,7 @@ e.set('attendees', [
 ]);
 e.set('start', '2014-07-01T02:00:00-05:00');
 e.set('end', '2014-07-01T02:30:00-05:00');
+e.set('timezone', 'US/Central');
 e.set('summary', 'Priestly Duties.');
 e.set('description', 'Home flu visit.');
 e.set('location', 'Casa');

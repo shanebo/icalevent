@@ -3,9 +3,9 @@ var tzone = require('tzone');
 
 var iCalEvent = function(event){
 	this.id = '-//iCalEvent.js v0.3//EN';
-	this.uid = this.uid();
 	this.event = {};
 	if (event) this.create(event);
+	if (!this.event.uid) this.event.uid = this.createUID();
 }
 
 iCalEvent.prototype = {
@@ -16,7 +16,7 @@ iCalEvent.prototype = {
 		}
 	},
 
-	uid: function(){
+	createUID: function(){
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
 			var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
 			return v.toString(16);
@@ -51,9 +51,11 @@ iCalEvent.prototype = {
 	},
 
 	start: function(datetime){
-		var d = new Date(datetime);
-		d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
-		this.event.timezone = tzone.getLocation(d);
+		if (!this.event.timezone) {
+			var d = new Date(datetime);
+			d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
+			this.event.timezone = tzone.getLocation(d);
+		}
 		this.event.start = this.format(datetime);
 	},
 
@@ -68,7 +70,7 @@ iCalEvent.prototype = {
 		result += 'VERSION:2.0\r\n';
 		result += 'PRODID:' + this.id + '\r\n';
 		result += 'BEGIN:VEVENT\r\n';
-		result += 'UID:' + this.uid + '\r\n';
+		result += 'UID:' + this.event.uid + '\r\n';
 		result += 'DTSTAMP:' + this.format(new Date()) + '\r\n';
 
 		if (this.event.method)			result += 'METHOD:' + this.event.method.toUpperCase() + '\r\n';

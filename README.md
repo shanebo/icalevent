@@ -15,6 +15,7 @@ With [npm](http://npmjs.org):
 var iCalEvent = require('icalevent');
 
 var event = new iCalEvent({
+	uid: 9873647,
 	offset: new Date().getTimezoneOffset(),
 	method: 'request',
 	status: 'confirmed',
@@ -30,6 +31,7 @@ var event = new iCalEvent({
 	],
 	start: '2014-07-01T02:00:00-05:00',
 	end: '2014-07-01T02:30:00-05:00',
+	timezone: 'US/Central',
 	summary: 'Priestly Duties',
 	description: 'Home flu visit.',
 	location: 'Casa',
@@ -48,6 +50,7 @@ var iCalEvent = require('icalevent');
 
 var event = new iCalEvent();
 
+event.set('uid', 9873647);
 event.set('offset', new Date().getTimezoneOffset());
 event.set('method', 'request');
 event.set('status', 'confirmed');
@@ -63,6 +66,7 @@ event.set('attendees', [
 ]);
 event.set('start', '2014-07-01T02:00:00-05:00');
 event.set('end', '2014-07-01T02:30:00-05:00');
+event.set('timezone', 'US/Central');
 event.set('summary', 'Priestly Duties.');
 event.set('description', 'Home flu visit.');
 event.set('location', 'Casa');
@@ -83,7 +87,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//iCalEvent.js v0.3//EN
 BEGIN:VEVENT
-UID:0617eadc-dcd5-4095-bf2f-7500bea29eaf
+UID:9873647
 DTSTAMP:20140316T003036
 METHOD:REQUEST
 STATUS:CONFIRMED
@@ -112,8 +116,10 @@ END:VCALENDAR
 
 #### Optional
 
+* **uid** (String or Integer) _The event uid. If you don't set the uid it will be set for you._
 * **method** (String) _The event method. For example, publish, request, reply, add, cancel, refresh, counter, and decline-counter_
 * **status** (String) _The event status. For example, cancelled, confirmed, tentative_
+* **timezone** (String) _The event's timezone in [ICS timezone format](https://github.com/shanebo/tzone/blob/master/lib/tzone.js). If you don't set the timezone it will be set for you._
 * **location** (String) _The event location of the event. For example, monastery_
 * **url** (String) _A url corresponding to the event_
 * **summary** (String) _A summary of the event_
@@ -171,7 +177,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//iCalEvent.js v0.3//EN
 BEGIN:VEVENT
-UID:0617eadc-dcd5-4095-bf2f-7500bea29eaf
+UID:9873647
 DTSTAMP:20140316T003036
 METHOD:REQUEST
 STATUS:CONFIRMED

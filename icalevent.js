@@ -76,8 +76,12 @@ iCalEvent.prototype = {
 		});
 	},
 
-	format: function(datetime){
-		return moment(datetime).format('YYYYMMDD[T]HHmmss');
+	format: function(datetime, onlyDate){
+		if(onlyDate) {
+			return moment(datetime).format('YYYYMMDD');
+		} else {
+			return moment(datetime).format('YYYYMMDD[T]HHmmss');
+		}
 	},
 
 	get: function(key){
@@ -93,11 +97,7 @@ iCalEvent.prototype = {
 		if (!this.event.timezone) {
 			this.event.timezone = tzone.getLocation(moment(datetime).toDate());
 		}
-		this.event.start = this.format(datetime);
-	},
-
-	end: function(datetime){
-		this.event.end = this.format(datetime);
+		this.event.start = datetime;
 	},
 
 	toFile: function(){
@@ -108,8 +108,8 @@ iCalEvent.prototype = {
 		result += 'DTSTAMP:' + this.format(new Date()) + '\r\n';
 
 		if (this.event.status)			result += 'STATUS:' + this.event.status.toUpperCase() + '\r\n';
-		if (this.event.start)			result += 'DTSTART;TZID=' + this.event.timezone + ':' + this.event.start + '\r\n';
-		if (this.event.end)				result += 'DTEND;TZID=' + this.event.timezone + ':' + this.event.end + '\r\n';
+		if (this.event.start)			result += 'DTSTART;TZID=' + this.event.timezone + (this.event.allDay ? ';VALUE=DATE' : '') + ':' + this.format(this.event.start, this.event.allDay) + '\r\n';
+		if (this.event.end)				result += 'DTEND;TZID=' + this.event.timezone + (this.event.allDay ? ';VALUE=DATE' : '') + ':' + this.format(this.event.end, this.event.allDay) + '\r\n';
 		if (this.event.summary)			result += 'SUMMARY:' + this.event.summary + '\r\n';
 		if (this.event.description)		result += 'DESCRIPTION:' + this.event.description + '\r\n';
 		if (this.event.organizer) {

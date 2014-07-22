@@ -1,4 +1,5 @@
 var tzone = require('tzone');
+var moment = require('moment');
 
 
 var iCalEvent = function(event){
@@ -24,21 +25,7 @@ iCalEvent.prototype = {
 	},
 
 	format: function(datetime){
-		function pad(n){
-			return (n < 10 ? '0' : '') + n;
-		}
-
-		var d = new Date(datetime);
-		d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
-
-		padded = (d.getUTCFullYear()
-			+ pad(d.getUTCMonth() + 1)
-			+ pad(d.getUTCDate()) + 'T'
-			+ pad(d.getUTCHours())
-			+ pad(d.getUTCMinutes())
-			+ pad(d.getUTCSeconds()));
-
-		return padded;
+		return moment(datetime).format('YYYYMMDD[T]HHmmss');
 	},
 
 	get: function(key){
@@ -52,9 +39,7 @@ iCalEvent.prototype = {
 
 	start: function(datetime){
 		if (!this.event.timezone) {
-			var d = new Date(datetime);
-			d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
-			this.event.timezone = tzone.getLocation(d);
+			this.event.timezone = tzone.getLocation(moment(datetime).toDate());
 		}
 		this.event.start = this.format(datetime);
 	},

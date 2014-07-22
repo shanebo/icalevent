@@ -4,10 +4,11 @@ var tzone = require('tzone');
 var http = require('http');
 
 
-var event = new iCalEvent({
+var calendar = new iCalendar({
+	method: 'request'
+}, [{
 	uid: 9873647,
 	offset: new Date().getTimezoneOffset(),
-	method: 'request',
 	status: 'confirmed',
 	attendees: [
 		{
@@ -30,17 +31,20 @@ var event = new iCalEvent({
 		email: 'luchador@monastery.org'
 	},
 	url: 'http://google.com/search?q=nacho+libre'
-});
+}]);
 
 
 // or
 
 
-var e = new iCalEvent();
+var c = new iCalendar();
+
+c.set('method', 'request');
+
+var e = c.addEvent();
 
 e.set('uid', 9873647);
 e.set('offset', new Date().getTimezoneOffset());
-e.set('method', 'request');
 e.set('status', 'confirmed');
 e.set('attendees', [
 	{
@@ -63,12 +67,15 @@ e.set('url', 'http://google.com/search?q=nacho+libre');
 
 
 console.log('\n');
-console.log(e.toFile());
+console.log(c.toFile());
+
+console.log('\n');
+console.log(calendar.toFile());
 
 
 http.createServer(function(request, response){
 	response.writeHead(200, {'Content-Type': 'text/calendar'});
-	var file = event.toFile();
+	var file = calendar.toFile();
 	response.end(file);
 }).listen(9999, '127.0.0.1');
 

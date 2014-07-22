@@ -1,9 +1,61 @@
 var tzone = require('tzone');
 var moment = require('moment');
 
+var iCalendar = function(calendar, events) {
+	this.calendar = {}
+	this.calendar.id = '-//iCalEvent.js v0.3//EN';
+	this.events = [];
+	if(calendar) {
+		this.create(calendar);
+	}
+	if(events) {
+		for(var i = 0; i < events.length; i++) {
+			this.addEvent(events[i]);
+		}
+	}
+}
+
+iCalendar.prototype = {
+	create: function(calendar){
+		for (var key in calendar) {
+			if (calendar.hasOwnProperty(key)) this.set(key, calendar[key]);
+		}
+	},
+
+	get: function(key){
+		if (this.calendar[key]) return this.calendar[key];
+	},
+
+	set: function(key, value){
+		if (this[key]) this[key](value)
+		else this.calendar[key] = value;
+	},
+
+	addEvent: function(event) {
+		newEvent = new iCalEvent(event);
+		this.events.push(newEvent);
+		return newEvent;
+	},
+
+	toFile: function() {
+		var result = '';
+
+		result += 'BEGIN:VCALENDAR\r\n';
+		result += 'VERSION:2.0\r\n';
+		result += 'PRODID:' + this.calendar.id + '\r\n';
+		if (this.calendar.method) result += 'METHOD:' + this.calendar.method.toUpperCase() + '\r\n';
+		
+		for(var i = 0; i < this.events.length; i++) {
+			result += this.events[i].toFile();
+		}
+		
+		result += 'END:VCALENDAR\r\n';
+
+		return result;
+	}
+}
 
 var iCalEvent = function(event){
-	this.id = '-//iCalEvent.js v0.3//EN';
 	this.event = {};
 	if (event) this.create(event);
 	if (!this.event.uid) this.event.uid = this.createUID();
@@ -51,14 +103,10 @@ iCalEvent.prototype = {
 	toFile: function(){
 		var result = '';
 
-		result += 'BEGIN:VCALENDAR\r\n';
-		result += 'VERSION:2.0\r\n';
-		result += 'PRODID:' + this.id + '\r\n';
 		result += 'BEGIN:VEVENT\r\n';
 		result += 'UID:' + this.event.uid + '\r\n';
 		result += 'DTSTAMP:' + this.format(new Date()) + '\r\n';
 
-		if (this.event.method)			result += 'METHOD:' + this.event.method.toUpperCase() + '\r\n';
 		if (this.event.status)			result += 'STATUS:' + this.event.status.toUpperCase() + '\r\n';
 		if (this.event.start)			result += 'DTSTART;TZID=' + this.event.timezone + ':' + this.event.start + '\r\n';
 		if (this.event.end)				result += 'DTEND;TZID=' + this.event.timezone + ':' + this.event.end + '\r\n';
@@ -84,7 +132,6 @@ iCalEvent.prototype = {
 		}
 
 		result += 'END:VEVENT\r\n';
-		result += 'END:VCALENDAR\r\n';
 
 		return result;
 	}
@@ -92,4 +139,4 @@ iCalEvent.prototype = {
 }
 
 
-module.exports = iCalEvent;
+module.exports = iCalendar;

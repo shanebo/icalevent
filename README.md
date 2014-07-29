@@ -12,17 +12,20 @@ With [npm](http://npmjs.org):
 ## Examples
 
 ``` js
-var iCalEvent = require('icalevent');
+var iCalendar = require('./icalevent');
 
-var event = new iCalEvent({
+var calendar = new iCalendar({
+	method: 'request',
+	name: 'Personal calendar',
+	description: 'Personal calendar of Johnny Boy'
+}, [{
 	uid: 9873647,
 	offset: new Date().getTimezoneOffset(),
-	method: 'request',
 	status: 'confirmed',
 	attendees: [
 		{
 			name: 'Johnny Boy',
-			email: 'johnny@numberfive.com'
+			email: 'johnny@numberfivevent.com'
 		},
 		{
 			name: 'Homer Simpson',
@@ -36,28 +39,51 @@ var event = new iCalEvent({
 	description: 'Home flu visit.',
 	location: 'Casa',
 	organizer: {
-		name: 'Nacho Libre',
+		name: 'Libre, Nacho',
 		email: 'luchador@monastery.org'
 	},
-	url: 'http://google.com/search?q=nacho+libre'
-});
+	url: 'http://googlevent.com/search?q=nacho+libre'
+}, {
+	offset: new Date().getTimezoneOffset(),
+	status: 'confirmed',
+	attendees: [
+		{
+			name: 'Johnny Boy',
+			email: 'johnny@numberfivevent.com'
+		}
+	],
+	start: '2014-07-02T10:00:00-05:00',
+	end: '2014-07-02T11:30:00-05:00',
+	timezone: 'US/Central',
+	summary: 'Meet with Jane, bring cake',
+	location: 'Somwhere',
+	organizer: {
+		name: 'Doe, Jane',
+		email: 'jane@doevent.com'
+	}
+}]);
 ```
 
 Or:
 
 ``` js
-var iCalEvent = require('icalevent');
+var iCalendar = require('./icalevent');
 
-var event = new iCalEvent();
+var calendar = new iCalendar();
+
+calendar.set('method', 'request');
+calendar.set('name', 'Personal calendar');
+calendar.set('description', 'Personal calendar of Johnny Boy');
+
+var event = calendar.addEvent();
 
 event.set('uid', 9873647);
 event.set('offset', new Date().getTimezoneOffset());
-event.set('method', 'request');
 event.set('status', 'confirmed');
 event.set('attendees', [
 	{
 		name: 'Johnny Boy',
-		email: 'johnny@numberfive.com'
+		email: 'johnny@numberfivevent.com'
 	},
 	{
 		name: 'Homer Simpson',
@@ -70,14 +96,31 @@ event.set('timezone', 'US/Central');
 event.set('summary', 'Priestly Duties.');
 event.set('description', 'Home flu visit.');
 event.set('location', 'Casa');
-event.set('organizer', { name: 'Nacho Libre', email: 'luchador@monastery.org' });
-event.set('url', 'http://google.com/search?q=nacho+libre');
+event.set('organizer', { name: 'Libre, Nacho', email: 'luchador@monastery.org' });
+event.set('url', 'http://googlevent.com/search?q=nacho+libre');
+
+var event2 = calendar.addEvent();
+
+event2.set('offset', new Date().getTimezoneOffset());
+event2.set('status', 'confirmed');
+event2.set('attendees', [
+	{
+		name: 'Johnny Boy',
+		email: 'johnny@numberfivevent.com'
+	}
+]);
+event2.set('start', '2014-07-02T10:00:00-05:00');
+event2.set('end', '2014-07-02T11:30:00-05:00');
+event2.set('timezone', 'US/Central');
+event2.set('summary', 'Meet with Jane, bring cake');
+event2.set('location', 'Somwhere');
+event2.set('organizer', {name: 'Doe, Jane', email: 'jane@doevent.com'});
 ```
 
 To ics string:
 
 ``` js
-event.toFile();
+calendar.toFile();
 ```
 
 Returns:
@@ -86,40 +129,155 @@ Returns:
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//iCalEvent.js v0.3//EN
+METHOD:REQUEST
+NAME:Personal calendar
+X-WR-CALNAME:Personal calendar
+DESCRIPTION:Personal calendar of Johnny Boy
+X-WR-CALDESC:Personal calendar of Johnny Boy
 BEGIN:VEVENT
 UID:9873647
-DTSTAMP:20140316T003036
-METHOD:REQUEST
+DTSTAMP:20140729T115736
 STATUS:CONFIRMED
-DTSTART;TZID=US/Central:20140701T020000
-DTEND;TZID=US/Central:20140701T023000
-SUMMARY:Priestly Duties.
+DTSTART;TZID=US/Central:20140701T090000
+DTEND;TZID=US/Central:20140701T093000
+SUMMARY:Priestly Duties
 DESCRIPTION:Home flu visit.
-ORGANIZER;CN=Nacho Libre:mailto:luchador@monastery.org
+ORGANIZER;CN=Libre\, Nacho:mailto:luchador@monastery.org
 LOCATION:Casa
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Johnny Boy:MAILTO:johnny@numberfive.com
 ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Homer Simpson:MAILTO:homer@powerplant.com
 END:VEVENT
+BEGIN:VEVENT
+UID:104a0a1f-2b0b-4fcb-9a36-83d868e67a08
+DTSTAMP:20140729T115736
+STATUS:CONFIRMED
+DTSTART;TZID=US/Central:20140702T170000
+DTEND;TZID=US/Central:20140702T183000
+SUMMARY:Meet with Jane\, bring cake
+ORGANIZER;CN=Doe\, Jane:mailto:jane@doe.com
+LOCATION:Somewhere
+ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Johnny Boy:MAILTO:johnny@numberfive.com
+END:VEVENT
 END:VCALENDAR
 ```
 
-## API
+## Calendar-API
+
+### Properties
+
+* **method** (String) _The calendar method. For example, publish, request, reply, add, cancel, refresh, counter, and decline-counter_
+* **id** (String) _The identifier of the product, that created this calendar. Defaults to "-//iCalEvent.js v0.3//EN"._
+* **name** (String) _A name, that describes the events in this calendar in short._
+* **description** (String) _A full description of the kind of events in this calendar._
+
+### Methods
+
+#### iCalendar(calendar, events)
+
+The constructor for a new iCalendar. Initializes the calendar properties with the values provided by the `calendar` hash and adds all events from the `events` array to the calendar.
+
+#### .addEvent(event)
+
+Creates a new event in this calendar and initializes it with the values provided by the `event` hash. Returns the newly created iCalEvent object. (see [Event-API](#event-api))
+
+``` js
+event = calendar.addEvent({
+	offset: new Date().getTimezoneOffset(),
+	status: 'confirmed',
+	attendees: [
+		{
+			name: 'Johnny Boy',
+			email: 'johnny@numberfivevent.com'
+		}
+	],
+	start: '2014-07-02T10:00:00-05:00',
+	end: '2014-07-02T11:30:00-05:00',
+	timezone: 'US/Central',
+	summary: 'Meet with Jane, bring cake',
+	location: 'Somwhere',
+	organizer: {
+		name: 'Doe, Jane',
+		email: 'jane@doevent.com'
+	}
+});
+```
+
+#### .set(property, value)
+``` js
+calendar.set('method', 'publish');
+```
+
+#### .get(property)
+``` js
+calendar.get('method');
+```
+
+Returns:
+
+```
+publish
+```
+
+#### .toFile()
+``` js
+calendar.toFile();
+```
+
+Returns:
+
+```
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//iCalEvent.js v0.3//EN
+METHOD:REQUEST
+NAME:Personal calendar
+X-WR-CALNAME:Personal calendar
+DESCRIPTION:Personal calendar of Johnny Boy
+X-WR-CALDESC:Personal calendar of Johnny Boy
+BEGIN:VEVENT
+UID:9873647
+DTSTAMP:20140729T115736
+STATUS:CONFIRMED
+DTSTART;TZID=US/Central:20140701T090000
+DTEND;TZID=US/Central:20140701T093000
+SUMMARY:Priestly Duties
+DESCRIPTION:Home flu visit.
+ORGANIZER;CN=Libre\, Nacho:mailto:luchador@monastery.org
+LOCATION:Casa
+URL;VALUE=URI:http://google.com/search?q=nacho+libre
+ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Johnny Boy:MAILTO:johnny@numberfive.com
+ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Homer Simpson:MAILTO:homer@powerplant.com
+END:VEVENT
+BEGIN:VEVENT
+UID:104a0a1f-2b0b-4fcb-9a36-83d868e67a08
+DTSTAMP:20140729T115736
+STATUS:CONFIRMED
+DTSTART;TZID=US/Central:20140702T170000
+DTEND;TZID=US/Central:20140702T183000
+SUMMARY:Meet with Jane\, bring cake
+ORGANIZER;CN=Doe\, Jane:mailto:jane@doe.com
+LOCATION:Somewhere
+ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Johnny Boy:MAILTO:johnny@numberfive.com
+END:VEVENT
+END:VCALENDAR
+```
+
+## Event-API
 
 ### Properties
 
 #### Required
 
-* **offset** (Integer) _The Date.getTimezoneOffset() of the timezone the event is set in. Important: the offset has to be set before start and end times_
+* **offset** (Integer) _The Datevent.getTimezoneOffset() of the timezone the event is set in. Important: the offset has to be set before start and end times_
 * **start** (Date Object) _The start date object of the event_
 * **end** (Date Object) _The end date object of the event_
 
 #### Optional
 
 * **uid** (String or Integer) _The event uid. If you don't set the uid it will be set for you._
-* **method** (String) _The event method. For example, publish, request, reply, add, cancel, refresh, counter, and decline-counter_
 * **status** (String) _The event status. For example, cancelled, confirmed, tentative_
-* **timezone** (String) _The event's timezone in [ICS timezone format](https://github.com/shanebo/tzone/blob/master/lib/tzone.js). If you don't set the timezone it will be set for you._
+* **timezone** (String) _The event's timezone in [ICS timezone format](https://github.com/shanebo/tzone/blob/master/lib/tzonevent.js). If you don't set the timezone it will be set for you._
 * **location** (String) _The event location of the event. For example, monastery_
 * **url** (String) _A url corresponding to the event_
 * **summary** (String) _A summary of the event_
@@ -138,7 +296,7 @@ END:VCALENDAR
 [
 	{
 		name: 'Johnny Boy',
-		email: 'johnny@numberfive.com'
+		email: 'johnny@numberfivevent.com'
 	},
 	{
 		name: 'Homer Simpson',
@@ -151,7 +309,7 @@ END:VCALENDAR
 
 #### .set(property, value)
 ``` js
-event.set('url', 'http://google.com/search?q=nacho+libre');
+event.set('url', 'http://googlevent.com/search?q=nacho+libre');
 ```
 
 #### .get(property)
@@ -162,7 +320,7 @@ event.get('url');
 Returns:
 
 ```
-http://google.com/search?q=nacho+libre
+http://googlevent.com/search?q=nacho+libre
 ```
 
 #### .toFile()
@@ -173,25 +331,20 @@ event.toFile();
 Returns:
 
 ```
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//iCalEvent.js v0.3//EN
 BEGIN:VEVENT
 UID:9873647
-DTSTAMP:20140316T003036
-METHOD:REQUEST
+DTSTAMP:20140729T115736
 STATUS:CONFIRMED
-DTSTART;TZID=US/Central:20140701T020000
-DTEND;TZID=US/Central:20140701T023000
-SUMMARY:Priestly Duties.
+DTSTART;TZID=US/Central:20140701T090000
+DTEND;TZID=US/Central:20140701T093000
+SUMMARY:Priestly Duties
 DESCRIPTION:Home flu visit.
-ORGANIZER;CN=Nacho Libre:mailto:luchador@monastery.org
+ORGANIZER;CN=Libre\, Nacho:mailto:luchador@monastery.org
 LOCATION:Casa
 URL;VALUE=URI:http://google.com/search?q=nacho+libre
 ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Johnny Boy:MAILTO:johnny@numberfive.com
 ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Homer Simpson:MAILTO:homer@powerplant.com
 END:VEVENT
-END:VCALENDAR
 ```
 
 

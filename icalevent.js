@@ -44,6 +44,14 @@ iCalendar.prototype = {
 		result += 'VERSION:2.0\r\n';
 		result += 'PRODID:' + this.calendar.id + '\r\n';
 		if (this.calendar.method) result += 'METHOD:' + this.calendar.method.toUpperCase() + '\r\n';
+		if (this.calendar.name) {
+			result += 'NAME:' + this.calendar.name + '\r\n';
+			result += 'X-WR-CALNAME:' + this.calendar.name + '\r\n';
+		}
+		if (this.calendar.description) {
+			result += 'DESCRIPTION:' + this.calendar.description + '\r\n';
+			result += 'X-WR-CALDESC:' + this.calendar.description + '\r\n';
+		}
 		
 		for(var i = 0; i < this.events.length; i++) {
 			result += this.events[i].toFile();

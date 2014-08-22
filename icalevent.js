@@ -2,7 +2,7 @@ var tzone = require('tzone');
 var moment = require('moment');
 
 var escapeText = function(text) {
-	return text.toString().replace(/([,;\\])/g, "\\$1");
+	return text.toString().replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n").replace(/\r/g, "\\r");
 }
 
 var iCalendar = function(calendar, events) {

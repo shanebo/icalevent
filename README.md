@@ -20,7 +20,6 @@ var calendar = new iCalendar({
 	description: 'Personal calendar of Johnny Boy'
 }, [{
 	uid: 9873647,
-	offset: new Date().getTimezoneOffset(),
 	status: 'confirmed',
 	attendees: [
 		{
@@ -44,7 +43,6 @@ var calendar = new iCalendar({
 	},
 	url: 'http://googlevent.com/search?q=nacho+libre'
 }, {
-	offset: new Date().getTimezoneOffset(),
 	status: 'confirmed',
 	attendees: [
 		{
@@ -78,7 +76,6 @@ calendar.set('description', 'Personal calendar of Johnny Boy');
 var event = calendar.addEvent();
 
 event.set('uid', 9873647);
-event.set('offset', new Date().getTimezoneOffset());
 event.set('status', 'confirmed');
 event.set('attendees', [
 	{
@@ -101,7 +98,6 @@ event.set('url', 'http://googlevent.com/search?q=nacho+libre');
 
 var event2 = calendar.addEvent();
 
-event2.set('offset', new Date().getTimezoneOffset());
 event2.set('status', 'confirmed');
 event2.set('attendees', [
 	{
@@ -183,7 +179,6 @@ Creates a new event in this calendar and initializes it with the values provided
 
 ``` js
 event = calendar.addEvent({
-	offset: new Date().getTimezoneOffset(),
 	status: 'confirmed',
 	attendees: [
 		{
@@ -269,7 +264,6 @@ END:VCALENDAR
 
 #### Required
 
-* **offset** (Integer) _The Datevent.getTimezoneOffset() of the timezone the event is set in. Important: the offset has to be set before start and end times_
 * **start** (Date Object) _The start date object of the event_
 * **end** (Date Object) _The end date object of the event_
 

@@ -3,11 +3,13 @@ var iCalEvent = require('icalevent');
 var tzone = require('tzone');
 var http = require('http');
 
-
-var event = new iCalEvent({
+var calendar = new iCalendar({
+	method: 'request',
+	name: 'Personal calendar',
+	description: 'Personal calendar of Johnny Boy'
+}, [{
 	uid: 9873647,
 	offset: new Date().getTimezoneOffset(),
-	method: 'request',
 	status: 'confirmed',
 	attendees: [
 		{
@@ -26,21 +28,44 @@ var event = new iCalEvent({
 	description: 'Home flu visit.',
 	location: 'Casa',
 	organizer: {
-		name: 'Nacho Libre',
+		name: 'Libre, Nacho',
 		email: 'luchador@monastery.org'
 	},
 	url: 'http://google.com/search?q=nacho+libre'
-});
+}, {
+	offset: new Date().getTimezoneOffset(),
+	status: 'confirmed',
+	attendees: [
+		{
+			name: 'Johnny Boy',
+			email: 'johnny@numberfive.com'
+		}
+	],
+	start: '2014-07-02T10:00:00-05:00',
+	end: '2014-07-02T11:30:00-05:00',
+	timezone: 'US/Central',
+	summary: 'Meet with Jane, bring cake',
+	location: 'Somewhere',
+	organizer: {
+		name: 'Doe, Jane',
+		email: 'jane@doe.com'
+	}
+}]);
 
 
 // or
 
 
-var e = new iCalEvent();
+var c = new iCalendar();
+
+c.set('method', 'request');
+c.set('name', 'Personal calendar');
+c.set('description', 'Personal calendar of Johnny Boy');
+
+var e = c.addEvent();
 
 e.set('uid', 9873647);
 e.set('offset', new Date().getTimezoneOffset());
-e.set('method', 'request');
 e.set('status', 'confirmed');
 e.set('attendees', [
 	{
@@ -58,17 +83,37 @@ e.set('timezone', 'US/Central');
 e.set('summary', 'Priestly Duties.');
 e.set('description', 'Home flu visit.');
 e.set('location', 'Casa');
-e.set('organizer', { name: 'Nacho Libre', email: 'luchador@monastery.org' });
+e.set('organizer', { name: 'Libre, Nacho', email: 'luchador@monastery.org' });
 e.set('url', 'http://google.com/search?q=nacho+libre');
+
+var e2 = c.addEvent();
+
+e2.set('offset', new Date().getTimezoneOffset());
+e2.set('status', 'confirmed');
+e2.set('attendees', [
+	{
+		name: 'Johnny Boy',
+		email: 'johnny@numberfive.com'
+	}
+]);
+e2.set('start', '2014-07-02T10:00:00-05:00');
+e2.set('end', '2014-07-02T11:30:00-05:00');
+e2.set('timezone', 'US/Central');
+e2.set('summary', 'Meet with Jane, bring cake');
+e2.set('location', 'Somewhere');
+e2.set('organizer', {name: 'Doe, Jane', email: 'jane@doe.com'});
 
 
 console.log('\n');
-console.log(e.toFile());
+console.log(c.toFile());
+
+console.log('\n');
+console.log(calendar.toFile());
 
 
 http.createServer(function(request, response){
 	response.writeHead(200, {'Content-Type': 'text/calendar'});
-	var file = event.toFile();
+	var file = calendar.toFile();
 	response.end(file);
 }).listen(9999, '127.0.0.1');
 

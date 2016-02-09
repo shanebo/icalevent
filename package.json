@@ -6,7 +6,8 @@
 	"repository": "git://github.com/shanebo/icalevent.git",
 	"author": "Shane Thacker <shane@steadymade.com>",
 	"dependencies": {
-		"tzone": "0.0.2"
+		"tzone": "0.0.2",
+		"moment": "2.7.0"
 	},
 	"engine": ">= 0.4.1",
 	"main": "./icalevent"

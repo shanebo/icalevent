@@ -1,8 +1,73 @@
 var tzone = require('tzone');
+var moment = require('moment');
 
+var escapeText = function(text) {
+	return text.toString().replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+}
+
+var iCalendar = function(calendar, events) {
+	this.calendar = {}
+	this.calendar.id = '-//iCalEvent.js v0.3//EN';
+	this.events = [];
+	if(calendar) {
+		this.create(calendar);
+	}
+	if(events) {
+		for(var i = 0; i < events.length; i++) {
+			this.addEvent(events[i]);
+		}
+	}
+}
+
+iCalendar.prototype = {
+	create: function(calendar){
+		for (var key in calendar) {
+			if (calendar.hasOwnProperty(key)) this.set(key, calendar[key]);
+		}
+	},
+
+	get: function(key){
+		if (this.calendar[key]) return this.calendar[key];
+	},
+
+	set: function(key, value){
+		if (this[key]) this[key](value)
+		else this.calendar[key] = value;
+	},
+
+	addEvent: function(event) {
+		newEvent = new iCalEvent(event);
+		this.events.push(newEvent);
+		return newEvent;
+	},
+
+	toFile: function() {
+		var result = '';
+
+		result += 'BEGIN:VCALENDAR\r\n';
+		result += 'VERSION:2.0\r\n';
+		result += 'PRODID:' + escapeText(this.calendar.id) + '\r\n';
+		if (this.calendar.method) result += 'METHOD:' + escapeText(this.calendar.method.toUpperCase()) + '\r\n';
+		if (this.calendar.name) {
+			result += 'NAME:' + escapeText(this.calendar.name) + '\r\n';
+			result += 'X-WR-CALNAME:' + escapeText(this.calendar.name) + '\r\n';
+		}
+		if (this.calendar.description) {
+			result += 'DESCRIPTION:' + escapeText(this.calendar.description) + '\r\n';
+			result += 'X-WR-CALDESC:' + escapeText(this.calendar.description) + '\r\n';
+		}
+		
+		for(var i = 0; i < this.events.length; i++) {
+			result += this.events[i].toFile();
+		}
+		
+		result += 'END:VCALENDAR\r\n';
+
+		return result;
+	}
+}
 
 var iCalEvent = function(event){
-	this.id = '-//iCalEvent.js v0.3//EN';
 	this.event = {};
 	if (event) this.create(event);
 	if (!this.event.uid) this.event.uid = this.createUID();
@@ -23,22 +88,12 @@ iCalEvent.prototype = {
 		});
 	},
 
-	format: function(datetime){
-		function pad(n){
-			return (n < 10 ? '0' : '') + n;
+	format: function(datetime, onlyDate){
+		if(onlyDate) {
+			return moment(datetime).format('YYYYMMDD');
+		} else {
+			return moment(datetime).format('YYYYMMDD[T]HHmmss');
 		}
-
-		var d = new Date(datetime);
-		d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
-
-		padded = (d.getUTCFullYear()
-			+ pad(d.getUTCMonth() + 1)
-			+ pad(d.getUTCDate()) + 'T'
-			+ pad(d.getUTCHours())
-			+ pad(d.getUTCMinutes())
-			+ pad(d.getUTCSeconds()));
-
-		return padded;
 	},
 
 	get: function(key){
@@ -52,44 +107,43 @@ iCalEvent.prototype = {
 
 	start: function(datetime){
 		if (!this.event.timezone) {
-			var d = new Date(datetime);
-			d.setUTCMinutes(d.getUTCMinutes() - this.event.offset);
-			this.event.timezone = tzone.getLocation(d);
+			this.event.timezone = tzone.getLocation(moment(datetime).toDate());
 		}
-		this.event.start = this.format(datetime);
-	},
-
-	end: function(datetime){
-		this.event.end = this.format(datetime);
+		this.event.start = datetime;
 	},
 
 	toFile: function(){
 		var result = '';
 
-		result += 'BEGIN:VCALENDAR\r\n';
-		result += 'VERSION:2.0\r\n';
-		result += 'PRODID:' + this.id + '\r\n';
 		result += 'BEGIN:VEVENT\r\n';
-		result += 'UID:' + this.event.uid + '\r\n';
+		result += 'UID:' + escapeText(this.event.uid) + '\r\n';
 		result += 'DTSTAMP:' + this.format(new Date()) + '\r\n';
 
-		if (this.event.method)			result += 'METHOD:' + this.event.method.toUpperCase() + '\r\n';
-		if (this.event.status)			result += 'STATUS:' + this.event.status.toUpperCase() + '\r\n';
-		if (this.event.start)			result += 'DTSTART;TZID=' + this.event.timezone + ':' + this.event.start + '\r\n';
-		if (this.event.end)				result += 'DTEND;TZID=' + this.event.timezone + ':' + this.event.end + '\r\n';
-		if (this.event.summary)			result += 'SUMMARY:' + this.event.summary + '\r\n';
-		if (this.event.description)		result += 'DESCRIPTION:' + this.event.description + '\r\n';
-		if (this.event.organizer)		result += 'ORGANIZER;CN=' + this.event.organizer.name + ':mailto:' + this.event.organizer.email + '\r\n';
-		if (this.event.location)		result += 'LOCATION:' + this.event.location + '\r\n';
+		if (this.event.status)			result += 'STATUS:' + escapeText(this.event.status.toUpperCase()) + '\r\n';
+		if (this.event.start)			result += 'DTSTART;TZID=' + this.event.timezone + (this.event.allDay ? ';VALUE=DATE' : '') + ':' + this.format(this.event.start, this.event.allDay) + '\r\n';
+		if (this.event.end)				result += 'DTEND;TZID=' + this.event.timezone + (this.event.allDay ? ';VALUE=DATE' : '') + ':' + this.format(this.event.end, this.event.allDay) + '\r\n';
+		if (this.event.summary)			result += 'SUMMARY:' + escapeText(this.event.summary) + '\r\n';
+		if (this.event.description)		result += 'DESCRIPTION:' + escapeText(this.event.description) + '\r\n';
+		if (this.event.organizer) {
+			result += 'ORGANIZER';
+			if (this.event.organizer.name) {
+				result += ';CN=' + escapeText(this.event.organizer.name);
+			}
+			result += ':';
+			if (this.event.organizer.email) {
+				result += 'mailto:' + this.event.organizer.email;
+			}
+			result += '\r\n';
+		}
+		if (this.event.location)		result += 'LOCATION:' + escapeText(this.event.location) + '\r\n';
 		if (this.event.url)				result += 'URL;VALUE=URI:' + this.event.url + '\r\n';
 		if (this.event.attendees) {
 			this.event.attendees.forEach(function(attendee){
-				result += 'ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=' + attendee.name + ':MAILTO:' + attendee.email + '\r\n';
+				result += 'ATTENDEE;RSVP=TRUE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=' + escapeText(attendee.name) + ':MAILTO:' + attendee.email + '\r\n';
 			});
 		}
 
 		result += 'END:VEVENT\r\n';
-		result += 'END:VCALENDAR\r\n';
 
 		return result;
 	}
@@ -97,4 +151,4 @@ iCalEvent.prototype = {
 }
 
 
-module.exports = iCalEvent;
+module.exports = iCalendar;
